@@ -12,12 +12,12 @@ def init_db():
     if not os.path.exists(DB_PATH):
         conn = sqlite3.connect(DB_PATH)
         c = conn.cursor()
-        c.execute("""
+        c.execute(
             CREATE TABLE products (
                 name TEXT PRIMARY KEY,
                 quantity INTEGER NOT NULL
             )
-        """)
+        )
         conn.commit()
         conn.close()
 
@@ -69,3 +69,4 @@ def update_product():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))  # Render ustawia port w zmiennej środowiskowej
     app.run(host="0.0.0.0", port=port, debug=True)
+
