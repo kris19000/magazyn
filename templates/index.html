@@ -1,23 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="pl">
 <head>
+    <meta charset="UTF-8">
     <title>Magazyn</title>
 </head>
 <body>
-    <h1>Magazyn</h1>
 
-    <h2>Lista produktów:</h2>
-    <ul>
-        {% for product in products %}
-            <li>{{ product[1] }} — ilość: {{ product[2] }}</li>
-        {% endfor %}
-    </ul>
+<h1>📦 Stan magazynu</h1>
 
-    <h2>Dodaj produkt:</h2>
-    <form action="{{ url_for('add_product') }}" method="post">
-        Nazwa: <input type="text" name="name" required>
-        Ilość: <input type="number" name="quantity" required>
-        <button type="submit">Dodaj</button>
-    </form>
+<h2>Lista produktów</h2>
+<ul>
+    {% for name, total in products %}
+        <li><strong>{{ name }}</strong> — ilość: {{ total }}</li>
+    {% else %}
+        <li>Brak produktów</li>
+    {% endfor %}
+</ul>
+
+<h2>Dodaj produkt</h2>
+<form method="post" action="{{ url_for('add_product') }}">
+    <label>
+        Nazwa:
+        <input type="text" name="name" required>
+    </label>
+    <br><br>
+    <label>
+        Ilość:
+        <input type="number" name="quantity" required>
+    </label>
+    <br><br>
+    <button type="submit">Dodaj</button>
+</form>
+
 </body>
 </html>
