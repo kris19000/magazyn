@@ -16,7 +16,7 @@
             height: 100%;
         }
 
-        /* Tabela produktów z wewnętrznym scroll */
+        /* Lewa tabela z wewnętrznym scroll */
         .products-table {
             height: 100%;
             overflow-y: auto;
@@ -26,6 +26,23 @@
         .sticky-form {
             position: sticky;
             top: 20px; /* odległość od góry */
+        }
+
+        /* Sticky nagłówki tabeli */
+        .products-table thead th {
+            position: sticky;
+            top: 0;
+            background-color: #f8f9fa; /* pasuje do table-light */
+            z-index: 2;
+        }
+
+        /* Scrollbar ładniejszy (opcjonalnie) */
+        .products-table::-webkit-scrollbar {
+            width: 8px;
+        }
+        .products-table::-webkit-scrollbar-thumb {
+            background-color: rgba(0,0,0,0.2);
+            border-radius: 4px;
         }
     </style>
 </head>
