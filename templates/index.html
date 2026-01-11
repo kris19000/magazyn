@@ -16,9 +16,9 @@
             height: 100%;
         }
 
-        /* Lewa tabela z wewnętrznym scroll */
+        /* Lewa tabela z wewnętrznym scroll, zmniejszona o ~50px aby formularz mieścił się na ekranie */
         .products-table {
-            height: 100%;
+            height: calc(100% - 50px);
             overflow-y: auto;
         }
 
@@ -114,15 +114,15 @@
                         Dodaj produkt
                     </div>
                     <div class="card-body">
-                        <form method="post"
-                              action="{{ url_for('add_product') }}"
-                              class="d-flex gap-2">
+                        <form id="addForm" method="post" action="{{ url_for('add_product') }}" class="d-flex gap-2">
 
                             <input type="text"
+                                   id="productName"
                                    name="name"
                                    class="form-control flex-grow-1"
                                    placeholder="Nazwa"
-                                   required>
+                                   required
+                                   autofocus>
 
                             <input type="number"
                                    name="quantity"
@@ -131,8 +131,7 @@
                                    placeholder="Ilość"
                                    required>
 
-                            <button type="submit"
-                                    class="btn btn-success">
+                            <button type="submit" class="btn btn-success">
                                 ➕
                             </button>
                         </form>
@@ -144,6 +143,14 @@
     </div>
 
 </div>
+
+<!-- Automatyczne ustawienie kursora po dodaniu produktu -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const input = document.getElementById('productName');
+        if(input) input.focus();
+    });
+</script>
 
 </body>
 </html>
