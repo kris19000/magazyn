@@ -9,8 +9,9 @@ DATA_DIR = os.environ.get("DATA_DIR", os.path.dirname(os.path.abspath(__file__))
 os.makedirs(DATA_DIR, exist_ok=True)
 DB_FILE = os.path.join(DATA_DIR, "magazyn.db")
 
+"""
 # Inicjalizacja bazy – ZAWSZE bezpieczna
-def init_db():
+ def init_db():
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
     c.execute("""
@@ -22,6 +23,7 @@ def init_db():
     """)
     conn.commit()
     conn.close()
+"""
 
 # Strona główna – UNIKALNE PRODUKTY + SUMA
 @app.route("/")
@@ -85,4 +87,5 @@ if __name__ == "__main__":
     init_db()
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
+
 
