@@ -1,151 +1,71 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Magazyn</title>
+from flask import Flask, render_template, request, redirect, url_for
+import sqlite3
+import os
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        html, body {
-            height: 100%;
-        }
+app = Flask(__name__)
 
-        .full-height-row {
-            height: 100%;
-        }
+# Ścieżka do bazy
+DB_PATH = "magazyn.db"
 
-        /* Lewa tabela z wewnętrznym scroll */
-        .products-table {
-            height: calc(100% - 50px); /* zmniejszona wysokość, aby formularz mieścił się na ekranie */
-            overflow-y: auto;
-            overflow-x: auto; /* scroll poziomy na wąskich ekranach */
-        }
+# --- Funkcja do inicjalizacji bazy (tylko jeśli nie istnieje) ---
+def init_db():
+    if not os.path.exists(DB_PATH):
+        conn = sqlite3.connect(DB_PATH)
+        c = conn.cursor()
+        c.execute("""
+            CREATE TABLE products (
+                name TEXT PRIMARY KEY,
+                quantity INTEGER NOT NULL
+            )
+        """)
+        conn.commit()
+        conn.close()
 
-        .sticky-form {
-            position: sticky;
-            top: 20px;
-        }
+# --- Strona główna ---
+@app.route('/')
+def index():
+    init_db()  # upewniamy się, że tabela istnieje
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    # pobieramy wszystkie produkty
+    c.execute("SELECT name, quantity FROM products ORDER BY name")
+    products = c.fetchall()
+    conn.close()
+    return render_template("index.html", products=products)
 
-        /* Sticky nagłówki */
-        .products-table thead th {
-            position: sticky;
-            top: 0;
-            background-color: #f8f9fa;
-            z-index: 2;
-        }
+# --- Dodawanie produktu ---
+@app.route('/add', methods=['POST'])
+def add_product():
+    name = request.form['name'].strip()
+    quantity = int(request.form['quantity'])
+    if name:
+        conn = sqlite3.connect(DB_PATH)
+        c = conn.cursor()
+        # jeśli produkt istnieje, sumujemy ilości
+        c.execute("SELECT quantity FROM products WHERE name = ?", (name,))
+        result = c.fetchone()
+        if result:
+            new_qty = result[0] + quantity
+            c.execute("UPDATE products SET quantity = ? WHERE name = ?", (new_qty, name))
+        else:
+            c.execute("INSERT INTO products (name, quantity) VALUES (?, ?)", (name, quantity))
+        conn.commit()
+        conn.close()
+    return redirect(url_for('index'))
 
-        /* Scrollbar ładniejszy */
-        .products-table::-webkit-scrollbar {
-            width: 8px;
-        }
-        .products-table::-webkit-scrollbar-thumb {
-            background-color: rgba(0,0,0,0.2);
-            border-radius: 4px;
-        }
-    </style>
-</head>
-<body class="bg-light">
+# --- Aktualizacja ilości produktu ---
+@app.route('/update', methods=['POST'])
+def update_product():
+    name = request.form['name']
+    quantity = int(request.form['quantity'])
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute("UPDATE products SET quantity = ? WHERE name = ?", (quantity, name))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('index'))
 
-<div class="container-fluid py-3" style="height: 100%;">
-    <h1 class="mb-4 text-center">📦 Stan magazynu</h1>
-    <div class="row full-height-row" style="height: calc(100% - 80px);">
-
-        <!-- LEWA POŁOWA – TABELA PRODUKTÓW -->
-        <div class="col-md-6 h-100">
-            <div class="card shadow-sm products-table h-100">
-                <div class="card-header bg-primary text-white">
-                    Produkty
-                </div>
-                <div class="card-body p-0">
-                    <table class="table table-striped mb-0 align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th style="width: 70%;">Nazwa</th>
-                                <th style="width: 100px;">Ilość</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for name, total in products %}
-                                <tr>
-                                    <td>{{ name }}</td>
-                                    <td>
-                                        <form method="post"
-                                              action="{{ url_for('update_product') }}"
-                                              class="d-flex gap-2">
-
-                                            <input type="hidden" name="name" value="{{ name }}">
-
-                                            <input type="number"
-                                                   name="quantity"
-                                                   value="{{ total }}"
-                                                   class="form-control form-control-sm"
-                                                   style="max-width: 100px;"
-                                                   required>
-
-                                            <button type="submit"
-                                                    class="btn btn-sm btn-warning">
-                                                Zmień
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            {% else %}
-                                <tr>
-                                    <td colspan="2" class="text-center text-muted">
-                                        Brak produktów
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- PRAWA POŁOWA – DODAWANIE PRODUKTU (sticky) -->
-        <div class="col-md-6 h-100">
-            <div class="sticky-form">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-success text-white">
-                        Dodaj produkt
-                    </div>
-                    <div class="card-body">
-                        <form id="addForm" method="post" action="{{ url_for('add_product') }}" class="d-flex gap-2">
-
-                            <input type="text"
-                                   id="productName"
-                                   name="name"
-                                   class="form-control flex-grow-1"
-                                   placeholder="Nazwa"
-                                   required
-                                   autofocus>
-
-                            <input type="number"
-                                   name="quantity"
-                                   class="form-control"
-                                   style="max-width: 100px;"
-                                   placeholder="Ilość"
-                                   required
-                                   value="1">
-
-                            <button type="submit" class="btn btn-success">
-                                ➕
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const input = document.getElementById('productName');
-        if(input) input.focus();
-    });
-</script>
-
-</body>
-</html>
+# --- Uruchomienie serwera ---
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))  # Render ustawia port w zmiennej środowiskowej
+    app.run(host="0.0.0.0", port=port, debug=True)
