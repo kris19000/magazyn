@@ -6,64 +6,83 @@ app = Flask(__name__)
 
 DB_PATH = "magazyn.db"
 
-# --- Funkcja inicjalizacji bazy ---
-def init_db():
+
+def get_db_connection():
     conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def init_db():
+    conn = get_db_connection()
     c = conn.cursor()
-    # Tworzymy tabelę tylko jeśli nie istnieje
     c.execute("""
         CREATE TABLE IF NOT EXISTS products (
-            name TEXT PRIMARY KEY,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
             quantity INTEGER NOT NULL
         )
     """)
     conn.commit()
     conn.close()
 
-# --- Strona główna ---
-@app.route('/')
+
+@app.route("/")
 def index():
-    init_db()  # upewniamy się, że tabela istnieje
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_db_connection()
     c = conn.cursor()
-    c.execute("SELECT name, quantity FROM products ORDER BY name")
+
+    c.execute("""
+        SELECT name, SUM(quantity) as quantity
+        FROM products
+        GROUP BY name
+        ORDER BY name
+    """)
     products = c.fetchall()
+
     conn.close()
     return render_template("index.html", products=products)
 
-# --- Dodawanie produktu ---
-@app.route('/add', methods=['POST'])
+
+@app.route("/add", methods=["POST"])
 def add_product():
-    name = request.form['name'].strip()
-    quantity = int(request.form['quantity'])
+    name = request.form["name"].strip()
+    quantity = int(request.form["quantity"])
+
     if name:
-        conn = sqlite3.connect(DB_PATH)
+        conn = get_db_connection()
         c = conn.cursor()
-        # jeśli produkt istnieje, sumujemy ilości
-        c.execute("SELECT quantity FROM products WHERE name = ?", (name,))
-        result = c.fetchone()
-        if result:
-            new_qty = result[0] + quantity
-            c.execute("UPDATE products SET quantity = ? WHERE name = ?", (new_qty, name))
-        else:
-            c.execute("INSERT INTO products (name, quantity) VALUES (?, ?)", (name, quantity))
+        c.execute(
+            "INSERT INTO products (name, quantity) VALUES (?, ?)",
+            (name, quantity)
+        )
         conn.commit()
         conn.close()
-    return redirect(url_for('index'))
 
-# --- Aktualizacja ilości produktu ---
-@app.route('/update', methods=['POST'])
+    return redirect(url_for("index"))
+
+
+@app.route("/update", methods=["POST"])
 def update_product():
-    name = request.form['name']
-    quantity = int(request.form['quantity'])
-    conn = sqlite3.connect(DB_PATH)
+    name = request.form["name"]
+    quantity = int(request.form["quantity"])
+
+    conn = get_db_connection()
     c = conn.cursor()
-    c.execute("UPDATE products SET quantity = ? WHERE name = ?", (quantity, name))
+
+    c.execute("DELETE FROM products WHERE name = ?", (name,))
+    c.execute(
+        "INSERT INTO products (name, quantity) VALUES (?, ?)",
+        (name, quantity)
+    )
+
     conn.commit()
     conn.close()
-    return redirect(url_for('index'))
 
-# --- Uruchomienie serwera ---
+    return redirect(url_for("index"))
+
+
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # Render ustawia zmienną PORT
+    init_db()
+    port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
