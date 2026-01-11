@@ -1,23 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Magazyn</title>
-</head>
-<body>
-    <h1>Magazyn</h1>
-
-    <h2>Lista produktów:</h2>
-    <ul>
-        {% for product in products %}
-            <li>{{ product[0] }} — ilość: {{ product[1] }}</li>
-        {% endfor %}
-    </ul>
-
-    <h2>Dodaj produkt:</h2>
-    <form action="{{ url_for('add_product') }}" method="post">
-        Nazwa: <input type="text" name="name" required>
-        Ilość: <input type="number" name="quantity" required>
-        <button type="submit">Dodaj</button>
-    </form>
-</body>
-</html>
+<form action="{{ url_for('add_product') }}" method="post">
+    Nazwa: <input type="text" name="name" required>
+    Ilość: <input type="number" name="quantity" required>
+    <button type="submit">Dodaj</button>
+</form>
