@@ -56,8 +56,33 @@ def add_product():
 
     return redirect(url_for("index"))
 
+@app.route("/update", methods=["POST"])
+def update_product():
+    name = request.form["name"]
+    new_quantity = int(request.form["quantity"])
+
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+
+    # usuwamy stare wpisy produktu
+    c.execute("DELETE FROM products WHERE name = ?", (name,))
+
+    # dodajemy jeden wpis z nową ilością
+    c.execute(
+        "INSERT INTO products (name, quantity) VALUES (?, ?)",
+        (name, new_quantity)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("index"))
+
+
+
 # Start aplikacji
 if __name__ == "__main__":
     init_db()
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
+
