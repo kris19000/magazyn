@@ -3,7 +3,10 @@ import sqlite3
 import os
 
 app = Flask(__name__)
-DB_FILE = 'magazyn.db'
+
+# Render działa w /opt/render/project/src/
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_FILE = os.path.join(BASE_DIR, 'magazyn.db')
 
 # Funkcja tworząca tabelę, jeśli nie istnieje
 def init_db():
@@ -19,7 +22,7 @@ def init_db():
     conn.commit()
     conn.close()
 
-# Strona główna - lista produktów z sumą ilości
+# Strona główna
 @app.route('/')
 def index():
     init_db()  # upewniamy się, że tabela istnieje
@@ -49,6 +52,6 @@ def add_product():
 
 # Uruchomienie serwera
 if __name__ == "__main__":
-    init_db()  # utworzenie tabeli przy starcie
-    port = int(os.environ.get("PORT", 5000))  # Render wymaga zmiennej PORT
+    init_db()  # Tworzymy tabelę przy starcie
+    port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
