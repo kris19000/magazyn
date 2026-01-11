@@ -1,28 +1,30 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 import os
 
 app = Flask(__name__)
 
-# Plik bazy w katalogu aplikacji
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_FILE = os.path.join(BASE_DIR, 'magazyn.db')
+# Render: katalog trwały / lokalnie katalog projektu
+DATA_DIR = os.environ.get('DATA_DIR', os.path.dirname(os.path.abspath(__file__)))
+os.makedirs(DATA_DIR, exist_ok=True)
+DB_FILE = os.path.join(DATA_DIR, 'magazyn.db')
 
-# Tworzymy tabelę jeśli nie istnieje
+# Tworzymy tabelę tylko jeśli baza nie istnieje
 def init_db():
-    conn = sqlite3.connect(DB_FILE)
-    c = conn.cursor()
-    c.execute("""
-        CREATE TABLE IF NOT EXISTS products (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            quantity INTEGER NOT NULL
-        )
-    """)
-    conn.commit()
-    conn.close()
+    if not os.path.exists(DB_FILE):
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        c.execute("""
+            CREATE TABLE products (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                quantity INTEGER NOT NULL
+            )
+        """)
+        conn.commit()
+        conn.close()
 
-# Strona główna – wyświetla wszystkie produkty
+# Strona główna
 @app.route('/')
 def index():
     init_db()  # upewniamy się, że tabela istnieje
@@ -43,7 +45,7 @@ def add_product():
     c.execute("INSERT INTO products (name, quantity) VALUES (?, ?)", (name, quantity))
     conn.commit()
     conn.close()
-    return redirect('/')
+    return redirect(url_for('index'))
 
 if __name__ == "__main__":
     init_db()
