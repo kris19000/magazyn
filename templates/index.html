@@ -1,35 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
     <title>Magazyn</title>
 </head>
 <body>
+    <h1>Magazyn</h1>
 
-<h1>Stan magazynowy</h1>
+    <h2>Lista produktów:</h2>
+    <ul>
+        {% for product in products %}
+            <li>{{ product[0] }} — ilość: {{ product[1] }}</li>
+        {% endfor %}
+    </ul>
 
-<form method="POST" action="/dodaj">
-    <input name="nazwa" placeholder="Nazwa produktu" required>
-    <input name="ilosc" type="number" placeholder="Ilość" required>
-    <button>Dodaj</button>
-</form>
-
-<hr>
-
-<table border="1">
-    <tr>
-        <th>ID</th>
-        <th>Produkt</th>
-        <th>Ilość</th>
-    </tr>
-    {% for p in produkty %}
-    <tr>
-        <td>{{ p[0] }}</td>
-        <td>{{ p[1] }}</td>
-        <td>{{ p[2] }}</td>
-    </tr>
-    {% endfor %}
-</table>
-
+    <h2>Dodaj produkt:</h2>
+    <form action="/add" method="post">
+        Nazwa: <input type="text" name="name" required>
+        Ilość: <input type="number" name="quantity" required>
+        <button type="submit">Dodaj</button>
+    </form>
 </body>
 </html>
