@@ -1,40 +1,34 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect
 import sqlite3
 import os
 
 app = Flask(__name__)
 
-# Render – katalog na dane trwałe
-DATA_DIR = '/opt/render/data'
-os.makedirs(DATA_DIR, exist_ok=True)
-DB_FILE = os.path.join(DATA_DIR, 'magazyn.db')
+# Plik bazy w katalogu aplikacji
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_FILE = os.path.join(BASE_DIR, 'magazyn.db')
 
-# Tworzymy tabelę tylko jeśli baza nie istnieje
+# Tworzymy tabelę jeśli nie istnieje
 def init_db():
-    if not os.path.exists(DB_FILE):
-        conn = sqlite3.connect(DB_FILE)
-        c = conn.cursor()
-        c.execute("""
-            CREATE TABLE products (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                quantity INTEGER NOT NULL
-            )
-        """)
-        conn.commit()
-        conn.close()
-
-# Strona główna
-@app.route('/')
-def index():
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
     c.execute("""
-        SELECT name, SUM(quantity) as total_quantity
-        FROM products
-        GROUP BY name
-        ORDER BY name ASC
+        CREATE TABLE IF NOT EXISTS products (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            quantity INTEGER NOT NULL
+        )
     """)
+    conn.commit()
+    conn.close()
+
+# Strona główna – wyświetla wszystkie produkty
+@app.route('/')
+def index():
+    init_db()  # upewniamy się, że tabela istnieje
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    c.execute("SELECT * FROM products")
     products = c.fetchall()
     conn.close()
     return render_template('index.html', products=products)
@@ -47,9 +41,9 @@ def add_product():
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
     c.execute("INSERT INTO products (name, quantity) VALUES (?, ?)", (name, quantity))
-    conn.commit()  # <--- commit jest konieczny
+    conn.commit()
     conn.close()
-    return redirect(url_for('index'))
+    return redirect('/')
 
 if __name__ == "__main__":
     init_db()
