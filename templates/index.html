@@ -18,8 +18,8 @@
         /* Nagłówek całej strony */
         header {
             width: 100%;
-            background-color: #4CAF50; /* Zielony */
-            color: white;
+            background-color: white; /* zmiana na białe tło */
+            color: black;
             padding: 15px;
             margin-bottom: 10px;
             box-sizing: border-box;
@@ -27,6 +27,7 @@
             text-align: center;
             font-size: 1.5em;
             font-weight: bold;
+            border: 1px solid #ccc;
         }
 
         /* Lewa kolumna: produkty */
@@ -39,11 +40,11 @@
             box-sizing: border-box;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            height: calc(100vh - 70px); /* zmniejszone, żeby zmieścić header i padding */
+            height: 70px; /* wysokość na ok. jeden wiersz tabeli */
         }
 
         .products-container h2 {
-            margin: 0 0 10px 0;
+            margin: 0 0 5px 0;
             background-color: #3b8fbf; /* Niebieski kolor dla nagłówka */
             padding: 5px 10px;
             border-radius: 3px;
@@ -52,7 +53,7 @@
 
         .products-table-wrapper {
             overflow-y: auto;
-            flex: 1; /* zajmuje resztę wysokości kontenera */
+            flex: 1;
         }
 
         table {
@@ -62,7 +63,7 @@
 
         th, td {
             border: 1px solid #ccc;
-            padding: 8px;
+            padding: 5px;
             text-align: left;
         }
 
@@ -90,11 +91,11 @@
             box-sizing: border-box;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            height: calc(100vh - 70px); /* dopasowanie do wysokości lewej kolumny */
+            height: 70px; /* wysokość na ok. jeden wiersz */
         }
 
         .add-container h2 {
-            margin: 0 0 10px 0;
+            margin: 0 0 5px 0;
             background-color: #4CAF50; /* Zielony */
             padding: 5px 10px;
             border-radius: 3px;
@@ -117,14 +118,14 @@
             flex: 1;
             padding: 5px;
             font-size: 1em;
-            width: 60px; /* Zmniejszenie szerokości komórki z ilością */
+            width: 60px;
         }
 
         .add-container button {
             flex: 1;
             padding: 5px;
             font-size: 1em;
-            background-color: #4CAF50; /* Zielony */
+            background-color: #4CAF50; /* zielony */
             color: white;
             border: none;
             cursor: pointer;
@@ -195,13 +196,12 @@
     </form>
 </div>
 
-<!-- Skrypt do automatycznego ustawienia kursora -->
 <script>
     // Funkcja ustawia kursor w polu nazwy po dodaniu produktu
     document.getElementById('add-product-form').addEventListener('submit', function(e) {
         setTimeout(function() {
             document.getElementById('name-field').focus();
-        }, 100); // opóźnienie, żeby focus zdążył wrócić
+        }, 100);
     });
 </script>
 
