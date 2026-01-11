@@ -6,23 +6,24 @@ app = Flask(__name__)
 
 DB_PATH = "magazyn.db"
 
+# --- Funkcja inicjalizacji bazy ---
 def init_db():
-    if not os.path.exists(DB_PATH):
-        conn = sqlite3.connect(DB_PATH)
-        c = conn.cursor()
-        # UWAGA: SQL w triple quotes
-        c.execute("""
-            CREATE TABLE products (
-                name TEXT PRIMARY KEY,
-                quantity INTEGER NOT NULL
-            )
-        """)
-        conn.commit()
-        conn.close()
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    # Tworzymy tabelę tylko jeśli nie istnieje
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS products (
+            name TEXT PRIMARY KEY,
+            quantity INTEGER NOT NULL
+        )
+    """)
+    conn.commit()
+    conn.close()
 
+# --- Strona główna ---
 @app.route('/')
 def index():
-    init_db()
+    init_db()  # upewniamy się, że tabela istnieje
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("SELECT name, quantity FROM products ORDER BY name")
@@ -30,6 +31,7 @@ def index():
     conn.close()
     return render_template("index.html", products=products)
 
+# --- Dodawanie produktu ---
 @app.route('/add', methods=['POST'])
 def add_product():
     name = request.form['name'].strip()
@@ -37,6 +39,7 @@ def add_product():
     if name:
         conn = sqlite3.connect(DB_PATH)
         c = conn.cursor()
+        # jeśli produkt istnieje, sumujemy ilości
         c.execute("SELECT quantity FROM products WHERE name = ?", (name,))
         result = c.fetchone()
         if result:
@@ -48,6 +51,7 @@ def add_product():
         conn.close()
     return redirect(url_for('index'))
 
+# --- Aktualizacja ilości produktu ---
 @app.route('/update', methods=['POST'])
 def update_product():
     name = request.form['name']
@@ -59,6 +63,7 @@ def update_product():
     conn.close()
     return redirect(url_for('index'))
 
+# --- Uruchomienie serwera ---
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 5000))  # Render ustawia zmienną PORT
     app.run(host="0.0.0.0", port=port, debug=True)
