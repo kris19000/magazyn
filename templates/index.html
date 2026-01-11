@@ -178,12 +178,22 @@
 <!-- Prawa kolumna: dodawanie produktu -->
 <div class="add-container">
     <h2>Dodaj produkt</h2>
-    <form action="{{ url_for('add_product') }}" method="post">
-        <input type="text" name="name" placeholder="Nazwa produktu" required autofocus>
+    <form action="{{ url_for('add_product') }}" method="post" id="add-product-form">
+        <input type="text" name="name" id="name-field" placeholder="Nazwa produktu" required autofocus>
         <input type="number" name="quantity" value="1" min="1" required>
         <button type="submit">Dodaj</button>
     </form>
 </div>
+
+<!-- Skrypt do automatycznego ustawienia kursora -->
+<script>
+    // Funkcja ustawia kursor w polu nazwy po dodaniu produktu
+    document.getElementById('add-product-form').addEventListener('submit', function(e) {
+        setTimeout(function() {
+            document.getElementById('name-field').focus();
+        }, 100); // opóźnienie, żeby focus zdążył wrócić
+    });
+</script>
 
 </body>
 </html>
