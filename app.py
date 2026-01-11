@@ -1,39 +1,54 @@
 from flask import Flask, render_template, request, redirect
 import sqlite3
-
-app = Flask(__name__)
-
-def get_db():
-    return sqlite3.connect("magazyn.db")
-
-@app.route("/")
-def index():
-    db = get_db()
-    produkty = db.execute("SELECT * FROM produkty").fetchall()
-    db.close()
-    return render_template("index.html", produkty=produkty)
-
-@app.route("/dodaj", methods=["POST"])
-def dodaj():
-    nazwa = request.form["nazwa"]
-    ilosc = request.form["ilosc"]
-
-    db = get_db()
-    db.execute(
-        "INSERT INTO produkty (nazwa, ilosc) VALUES (?, ?)",
-        (nazwa, ilosc)
-    )
-    db.commit()
-    db.close()
-    return redirect("/")
-    
 import os
 
+app = Flask(__name__)
+DB_FILE = 'magazyn.db'
+
+# Funkcja tworząca tabelę, jeśli nie istnieje
+def init_db():
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS products (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            quantity INTEGER NOT NULL
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+# Strona główna - lista produktów z sumą ilości
+@app.route('/')
+def index():
+    init_db()  # upewniamy się, że tabela istnieje
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    c.execute("""
+        SELECT name, SUM(quantity) as total_quantity
+        FROM products
+        GROUP BY name
+        ORDER BY name ASC
+    """)
+    products = c.fetchall()
+    conn.close()
+    return render_template('index.html', products=products)
+
+# Dodawanie produktu
+@app.route('/add', methods=['POST'])
+def add_product():
+    name = request.form['name']
+    quantity = int(request.form['quantity'])
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    c.execute("INSERT INTO products (name, quantity) VALUES (?, ?)", (name, quantity))
+    conn.commit()
+    conn.close()
+    return redirect('/')
+
+# Uruchomienie serwera
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
+    init_db()  # utworzenie tabeli przy starcie
+    port = int(os.environ.get("PORT", 5000))  # Render wymaga zmiennej PORT
     app.run(host="0.0.0.0", port=port, debug=True)
-
-
-
-
-
