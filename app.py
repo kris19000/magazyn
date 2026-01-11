@@ -1,52 +1,31 @@
 from flask import Flask, render_template, request, redirect
 import sqlite3
-import os
 
 app = Flask(__name__)
-DB_FILE = 'magazyn.db'
 
-# Funkcja pomocnicza: tworzy tabelę jeśli nie istnieje
-def init_db():
-    conn = sqlite3.connect(DB_FILE)
-    c = conn.cursor()
-    c.execute("""
-        CREATE TABLE IF NOT EXISTS products (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            quantity INTEGER NOT NULL
-        )
-    """)
-    conn.commit()
-    conn.close()
+def get_db():
+    return sqlite3.connect("magazyn.db")
 
-# Strona główna - lista produktów z sumą ilości
-@app.route('/')
+@app.route("/")
 def index():
-    init_db()  # upewniamy się, że tabela istnieje
-    conn = sqlite3.connect(DB_FILE)
-    c = conn.cursor()
-    c.execute("""
-        SELECT name, SUM(quantity) as total_quantity
-        FROM products
-        GROUP BY name
-        ORDER BY name ASC
-    """)
-    products = c.fetchall()
-    conn.close()
-    return render_template('index.html', products=products)
+    db = get_db()
+    produkty = db.execute("SELECT * FROM produkty").fetchall()
+    db.close()
+    return render_template("index.html", produkty=produkty)
 
-# Dodawanie produktu
-@app.route('/add', methods=['POST'])
-def add_product():
-    name = request.form['name']
-    quantity = int(request.form['quantity'])
-    conn = sqlite3.connect(DB_FILE)
-    c = conn.cursor()
-    c.execute("INSERT INTO products (name, quantity) VALUES (?, ?)", (name, quantity))
-    conn.commit()
-    conn.close()
-    return redirect('/')
+@app.route("/dodaj", methods=["POST"])
+def dodaj():
+    nazwa = request.form["nazwa"]
+    ilosc = request.form["ilosc"]
 
-# Uruchomienie serwera
+    db = get_db()
+    db.execute(
+        "INSERT INTO produkty (nazwa, ilosc) VALUES (?, ?)",
+        (nazwa, ilosc)
+    )
+    db.commit()
+    db.close()
+    return redirect("/")
+    
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # Render wymaga zmiennej P
+    app.run(debug=True)
