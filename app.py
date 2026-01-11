@@ -9,20 +9,18 @@ DATA_DIR = os.environ.get('DATA_DIR', os.path.dirname(os.path.abspath(__file__))
 os.makedirs(DATA_DIR, exist_ok=True)
 DB_FILE = os.path.join(DATA_DIR, 'magazyn.db')
 
-# Tworzymy tabelę tylko jeśli baza nie istnieje
 def init_db():
-    if not os.path.exists(DB_FILE):
-        conn = sqlite3.connect(DB_FILE)
-        c = conn.cursor()
-        c.execute("""
-            CREATE TABLE products (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                quantity INTEGER NOT NULL
-            )
-        """)
-        conn.commit()
-        conn.close()
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS products (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            quantity INTEGER NOT NULL
+        )
+    """)
+    conn.commit()
+    conn.close()
 
 # Strona główna
 @app.route('/')
@@ -51,3 +49,4 @@ if __name__ == "__main__":
     init_db()
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
+
