@@ -10,7 +10,7 @@
             padding: 20px;
             display: flex;
             flex-wrap: wrap;
-            gap: 2%;
+            gap: 0; /* Usunięcie marginesów */
             height: 100vh;
             background-color: #f5f5f5;
         }
@@ -32,7 +32,7 @@
 
         /* Lewa kolumna: produkty */
         .products-container {
-            width: 48%;
+            width: 50%; /* Zmieniamy na 50%, aby była równa z prawą tabelą */
             display: flex;
             flex-direction: column;
             background-color: white;
@@ -85,7 +85,7 @@
 
         /* Prawa kolumna: dodawanie produktu */
         .add-container {
-            width: 48%;
+            width: 50%; /* Zmieniamy na 50%, aby była równa z lewą tabelą */
             background-color: white;
             padding: 10px;
             box-sizing: border-box;
