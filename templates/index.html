@@ -3,218 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <title>Stan magazynu</title>
+
     <style>
+        /* ===== PODSTAWA ===== */
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
+            font-family: Arial, sans-serif;
             background-color: #f5f5f5;
         }
-/* Nagłówek strony */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    background-color: #f5f5f5;
-    height: 100vh; /* cała wysokość okna przeglądarki */
-    box-sizing: border-box;
-}
 
-header {
-    width: 100%;
-    background-color: white;
-    color: black;
-    padding: 10px 0;
-    margin-bottom: 5px;
-    box-sizing: border-box;
-    border-radius: 5px;
-    text-align: center;
-    font-size: 1.5em;
-    font-weight: bold;
-    border: 1px solid #ccc;
-}
+        header {
+            background: white;
+            border-bottom: 1px solid #ccc;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            padding: 10px;
+        }
 
-/* Kontenery tabel */
-.products-container, .add-container {
-    width: 49%;
-    display: flex;
-    flex-direction: column;
-    background-color: white;
-    padding: 1px;
-    box-sizing: border-box;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    height: calc(100vh - 135px); /* całkowita wysokość minus header + margines */
-}
+        /* ===== LAYOUT (KLUCZOWE!) ===== */
+        .layout {
+            display: flex;
+            gap: 20px;
+            padding: 10px;
+        }
 
-/* Lewa tabela - Produkty */
-.products-container h2 {
-    margin: 0 0 5px 0;
-    background-color: #3b8fbf;
-    padding: 1px 10px;
-    border-radius: 3px;
-    color: white;
-}
+        /* ===== KONTENERY ===== */
+        .products-container,
+        .add-container {
+            width: 49%;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            height: calc(100vh - 135px); /* ↓ 2 cm krócej */
+            padding: 1px;
+        }
 
-.products-table-wrapper {
-    overflow-y: auto;
-    flex: 1; /* zajmuje całą pozostałą przestrzeń w kontenerze */
-}
+        /* ===== NAGŁÓWKI SEKCJI ===== */
+        .products-container h2 {
+            margin: 0;
+            background: #3b8fbf;
+            color: white;
+            padding: 3px 8px;
+        }
 
-/* Prawa tabela - Dodawanie produktu */
-.add-container h2 {
-    margin: 0 0 5px 0;
-    background-color: #4CAF50;
-    padding: 1px 10px;
-    border-radius: 3px;
-    color: white;
-}
+        .add-container h2 {
+            margin: 0;
+            background: #4CAF50;
+            color: white;
+            padding: 3px 8px;
+        }
 
-.add-container form {
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
-    margin-top: 5px;
-}
+        /* ===== TABELA ===== */
+        .products-table-wrapper {
+            flex: 1;
+            overflow-y: auto;
+        }
 
-.add-container input[type="text"] {
-    flex: 3;
-    padding: 1px;
-    font-size: 1em;
-}
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-.add-container input[type="number"] {
-    flex: 1;
-    padding: 1px;
-    font-size: 1em;
-    width: 60px;
-}
+        th, td {
+            border: 1px solid #ccc;
+            padding: 1px;
+        }
 
-.add-container button {
-    flex: 1;
-    padding: 1px;
-    font-size: 1em;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 3px;
-}
+        th {
+            position: sticky;
+            top: 0;
+            background: #eee;
+            z-index: 2;
+        }
 
-.add-container button:hover {
-    background-color: #45a049;
-}
+        .name-col { width: 80%; }
+        .qty-col  { width: 20%; }
 
-/* Tabela produktów */
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
+        /* ===== PRZYCISKI ===== */
+        button {
+            border: none;
+            padding: 2px 6px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
 
-th, td {
-    border: 1px solid #ccc;
-    padding: 1px;
-    text-align: left;
-}
+        .btn-update {
+            background: #FF9800;
+            color: white;
+        }
 
-th {
-    position: sticky;
-    top: 0;
-    background: #f0f0f0;
-    z-index: 2;
-}
+        .btn-add {
+            background: #4CAF50;
+            color: white;
+        }
 
-th.name-col { width: 70%; }
-th.qty-col { width: 30%; }
+        /* ===== FORMULARZ ===== */
+        form {
+            display: flex;
+            gap: 5px;
+            padding: 5px;
+        }
 
-td.name-col { width: 70%; }
-td.qty-col { width: 30%; }
+        input[type="text"] {
+            flex: 3;
+            padding: 1px;
+        }
 
-tr:nth-child(even) { background-color: #f9f9f9; }
-tr:hover { background-color: #f1f1f1; }
+        input[type="number"] {
+            flex: 1;
+            padding: 1px;
+            width: 60px;
+        }
 
-.products-table-wrapper button {
-    background-color: #FF9800;
-    color: white;
-    border: none;
-    padding: 1px 3px;
-    border-radius: 3px;
-    cursor: pointer;
-}
+        /* ===== MOBILE ===== */
+        @media (max-width: 800px) {
+            .layout {
+                flex-direction: column;
+            }
 
-.products-table-wrapper button:hover {
-    background-color: #e68900;
-}
-
-/* Responsywność */
-@media (max-width: 800px) {
-    body { flex-direction: column; }
-    .products-container, .add-container { width: 100%; height: auto; }
-    .products-table-wrapper { max-height: 300px; }
-}
-
+            .products-container,
+            .add-container {
+                width: 100%;
+                height: auto;
+            }
+        }
     </style>
 </head>
+
 <body>
 
 <header>📦 Stan magazynu</header>
 
-<!-- Lewa kolumna: tabela produktów -->
-<div class="products-container">
-    <h2>Produkty</h2>
-    <div class="products-table-wrapper">
-        <table>
-            <thead>
-                <tr>
-                    <th class="name-col">Nazwa</th>
-                    <th class="qty-col">Ilość</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for name, quantity in products %}
-                <tr>
-                    <td class="name-col">{{ name }}</td>
-                    <td class="qty-col">
-                        <form action="{{ url_for('update_product') }}" method="post">
-                            <input type="hidden" name="name" value="{{ name }}">
-                            <input type="number" name="quantity" value="{{ quantity }}" min="0" style="width: 60px;">
-                            <button type="submit">Zmień</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<div class="layout">
+
+    <!-- ===== LEWA: PRODUKTY ===== -->
+    <div class="products-container">
+        <h2>Produkty</h2>
+
+        <div class="products-table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="name-col">Nazwa</th>
+                        <th class="qty-col">Ilość</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in products %}
+                    <tr>
+                        <td class="name-col">{{ p["name"] }}</td>
+                        <td class="qty-col">
+                            <form action="{{ url_for('update_product') }}" method="post">
+                                <input type="hidden" name="name" value="{{ p['name'] }}">
+                                <input type="number" name="quantity" value="{{ p['quantity'] }}" min="0">
+                                <button class="btn-update">Zmień</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 
-<!-- Prawa kolumna: dodawanie produktu -->
-<div class="add-container">
-    <h2>Dodaj produkt</h2>
-    <form action="{{ url_for('add_product') }}" method="post" id="add-product-form">
-        <input type="text" name="name" id="name-field" placeholder="Nazwa produktu" required autofocus>
-        <input type="number" name="quantity" value="1" min="1" required>
-        <button type="submit">Dodaj</button>
-    </form>
-</div>
+    <!-- ===== PRAWA: DODAWANIE ===== -->
+    <div class="add-container">
+        <h2>Dodaj produkt</h2>
 
-<script>
-    // Funkcja ustawia kursor w polu nazwy po dodaniu produktu
-    document.getElementById('add-product-form').addEventListener('submit', function(e) {
-        setTimeout(function() {
-            document.getElementById('name-field').focus();
-        }, 100);
-    });
-</script>
+        <form action="{{ url_for('add_product') }}" method="post">
+            <input type="text" name="name" placeholder="Nazwa produktu" required autofocus>
+            <input type="number" name="quantity" value="1" min="1">
+            <button class="btn-add">Dodaj</button>
+        </form>
+    </div>
+
+</div>
 
 </body>
 </html>
-
-
-
