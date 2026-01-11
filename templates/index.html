@@ -13,139 +13,139 @@
             gap: 20px;
             background-color: #f5f5f5;
         }
+/* Nagłówek strony */
+header {
+    width: 100%;
+    background-color: white;
+    color: black;
+    padding: 10px 0;
+    margin-bottom: 5px; /* zmniejszony margines */
+    box-sizing: border-box;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    border: 1px solid #ccc;
+}
 
-        /* Nagłówek strony */
-        header {
-            width: 100%;
-            background-color: white;
-            color: black;
-            padding: 10px 0;
-            margin-bottom: 5px; /* zmniejszony margines */
-            box-sizing: border-box;
-            border-radius: 5px;
-            text-align: center;
-            font-size: 1.5em;
-            font-weight: bold;
-            border: 1px solid #ccc;
-        }
+/* Kontenery tabel */
+.products-container, .add-container {
+    width: 49%; /* obie tabele obok siebie */
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    padding: 1px; /* Zmieniony padding z 10px na 1px */
+    box-sizing: border-box;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    min-height: 300px;
+}
 
-        /* Kontenery tabel */
-        .products-container, .add-container {
-            width: 49%; /* obie tabele obok siebie */
-            display: flex;
-            flex-direction: column;
-            background-color: white;
-            padding: 10px;
-            box-sizing: border-box;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            min-height: 300px;
-        }
+/* Lewa tabela - Produkty */
+.products-container h2 {
+    margin: 0 0 5px 0;
+    background-color: #3b8fbf;
+    padding: 1px 10px; /* Zmieniono padding na 1px w poziomie */
+    border-radius: 3px;
+    color: white;
+}
 
-        /* Lewa tabela - Produkty */
-        .products-container h2 {
-            margin: 0 0 5px 0;
-            background-color: #3b8fbf;
-            padding: 5px 10px;
-            border-radius: 3px;
-            color: white;
-        }
+.products-table-wrapper {
+    overflow-y: auto;
+    flex: 1;
+    max-height: 60vh;
+}
 
-        .products-table-wrapper {
-            overflow-y: auto;
-            flex: 1;
-            max-height: 60vh;
-        }
+/* Tabele */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+th, td {
+    border: 1px solid #ccc;
+    padding: 1px; /* Zmieniony padding z 5px na 1px */
+    text-align: left;
+}
 
-        th, td {
-            border: 1px solid #ccc;
-            padding: 5px;
-            text-align: left;
-        }
+th {
+    position: sticky;
+    top: 0;
+    background: #f0f0f0;
+    z-index: 2;
+}
 
-        th {
-            position: sticky;
-            top: 0;
-            background: #f0f0f0;
-            z-index: 2;
-        }
+th.name-col { width: 70%; }
+th.qty-col { width: 30%; }
 
-        th.name-col { width: 70%; }
-        th.qty-col { width: 30%; }
+td.name-col { width: 70%; }
+td.qty-col { width: 30%; }
 
-        td.name-col { width: 70%; }
-        td.qty-col { width: 30%; }
+tr:nth-child(even) { background-color: #f9f9f9; }
+tr:hover { background-color: #f1f1f1; }
 
-        tr:nth-child(even) { background-color: #f9f9f9; }
-        tr:hover { background-color: #f1f1f1; }
+ /* Prawa tabela - Dodawanie produktu */
+.add-container h2 {
+    margin: 0 0 5px 0;
+    background-color: #4CAF50;
+    padding: 1px 10px; /* Zmieniono padding na 1px w poziomie */
+    border-radius: 3px;
+    color: white;
+}
 
-        /* Prawa tabela - Dodawanie produktu */
-        .add-container h2 {
-            margin: 0 0 5px 0;
-            background-color: #4CAF50;
-            padding: 5px 10px;
-            border-radius: 3px;
-            color: white;
-        }
+.add-container form {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
 
-        .add-container form {
-            display: flex;
-            gap: 5px;
-            flex-wrap: wrap;
-        }
+.add-container input[type="text"] {
+    flex: 3;
+    padding: 1px; /* Zmieniono padding na 1px */
+    font-size: 1em;
+}
 
-        .add-container input[type="text"] {
-            flex: 3;
-            padding: 5px;
-            font-size: 1em;
-        }
+.add-container input[type="number"] {
+    flex: 1;
+    padding: 1px; /* Zmieniono padding na 1px */
+    font-size: 1em;
+    width: 60px;
+}
 
-        .add-container input[type="number"] {
-            flex: 1;
-            padding: 5px;
-            font-size: 1em;
-            width: 60px;
-        }
+.add-container button {
+    flex: 1;
+    padding: 1px; /* Zmieniono padding na 1px */
+    font-size: 1em;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+}
 
-        .add-container button {
-            flex: 1;
-            padding: 5px;
-            font-size: 1em;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 3px;
-        }
+.add-container button:hover {
+    background-color: #45a049;
+}
 
-        .add-container button:hover {
-            background-color: #45a049;
-        }
+.products-table-wrapper button {
+    background-color: #FF9800;
+    color: white;
+    border: none;
+    padding: 1px 3px; /* Zmieniono padding na 1px */
+    border-radius: 3px;
+    cursor: pointer;
+}
 
-        .products-table-wrapper button {
-            background-color: #FF9800;
-            color: white;
-            border: none;
-            padding: 3px 6px;
-            border-radius: 3px;
-            cursor: pointer;
-        }
+.products-table-wrapper button:hover {
+    background-color: #e68900;
+}
 
-        .products-table-wrapper button:hover {
-            background-color: #e68900;
-        }
-
-        /* Responsywność */
-        @media (max-width: 800px) {
-            body { flex-direction: column; }
-            .products-container, .add-container { width: 100%; }
-            .products-table-wrapper { max-height: 300px; }
-        }
+/* Responsywność */
+@media (max-width: 800px) {
+    body { flex-direction: column; }
+    .products-container, .add-container { width: 100%; }
+    .products-table-wrapper { max-height: 300px; }
+}
     </style>
 </head>
 <body>
@@ -202,3 +202,4 @@
 
 </body>
 </html>
+
