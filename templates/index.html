@@ -10,17 +10,17 @@
             padding: 20px;
             display: flex;
             flex-wrap: wrap;
-            gap: 0; /* Usunięcie marginesów */
+            gap: 0;
             height: 100vh;
             background-color: #f5f5f5;
         }
 
-        /* Nagłówek całej strony */
+        /* Nagłówek całej strony - zmniejszona wysokość */
         header {
             width: 100%;
-            background-color: white; /* zmiana na białe tło */
+            background-color: white;
             color: black;
-            padding: 15px;
+            padding: 10px; /* Mniejszy padding */
             margin-bottom: 10px;
             box-sizing: border-box;
             border-radius: 5px;
@@ -32,7 +32,7 @@
 
         /* Lewa kolumna: produkty */
         .products-container {
-            width: 50%; /* Zmieniamy na 50%, aby była równa z prawą tabelą */
+            width: 50%;
             display: flex;
             flex-direction: column;
             background-color: white;
@@ -40,12 +40,12 @@
             box-sizing: border-box;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            height: calc(50vh - 50px); /* wysokość na jeden wiersz mniej */
+            height: calc(50vh - 50px);
         }
 
         .products-container h2 {
             margin: 0 0 5px 0;
-            background-color: #3b8fbf; /* Niebieski kolor dla nagłówka */
+            background-color: #3b8fbf;
             padding: 5px 10px;
             border-radius: 3px;
             color: white;
@@ -85,18 +85,18 @@
 
         /* Prawa kolumna: dodawanie produktu */
         .add-container {
-            width: 50%; /* Zmieniamy na 50%, aby była równa z lewą tabelą */
+            width: 50%;
             background-color: white;
             padding: 10px;
             box-sizing: border-box;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            height: calc(50vh - 50px); /* wysokość na jeden wiersz mniej */
+            height: calc(50vh - 50px);
         }
 
         .add-container h2 {
             margin: 0 0 5px 0;
-            background-color: #4CAF50; /* Zielony */
+            background-color: #4CAF50; 
             padding: 5px 10px;
             border-radius: 3px;
             color: white;
@@ -125,7 +125,7 @@
             flex: 1;
             padding: 5px;
             font-size: 1em;
-            background-color: #4CAF50; /* zielony */
+            background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
@@ -136,9 +136,8 @@
             background-color: #45a049;
         }
 
-        /* Przycisk "Zmień" pomarańczowy */
         button[type="submit"] {
-            background-color: #FF9800; /* Pomarańczowy */
+            background-color: #FF9800;
         }
 
         button[type="submit"]:hover {
