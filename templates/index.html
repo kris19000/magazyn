@@ -14,7 +14,7 @@
             background-color: #f5f5f5;
         }
 
-        /* Nagłówek strony, wysokość dopasowana do zawartości */
+        /* Nagłówek strony */
         header {
             width: 100%;
             background-color: white;
@@ -31,7 +31,7 @@
 
         /* Kontener z produktami - lewa tabela */
         .products-container {
-            width: 50%;
+            width: 45%; /* Zmniejszona szerokość */
             display: flex;
             flex-direction: column;
             background-color: white;
@@ -39,7 +39,7 @@
             box-sizing: border-box;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            min-height: 300px;  /* Gwarantujemy minimalną wysokość kontenera */
+            min-height: 300px;
         }
 
         .products-container h2 {
@@ -53,7 +53,7 @@
         .products-table-wrapper {
             overflow-y: auto;
             flex: 1;
-            max-height: 60vh; /* Tabelka z produktami ma przewijanie, jeśli jest za długa */
+            max-height: 60vh;
         }
 
         table {
@@ -85,13 +85,13 @@
 
         /* Kontener do dodawania produktów - prawa tabela */
         .add-container {
-            width: 50%;
+            width: 45%; /* Zmniejszona szerokość */
             background-color: white;
             padding: 10px;
             box-sizing: border-box;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            min-height: 300px; /* Gwarantujemy minimalną wysokość */
+            min-height: 300px;
         }
 
         .add-container h2 {
