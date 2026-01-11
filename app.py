@@ -4,11 +4,12 @@ import os
 
 app = Flask(__name__)
 
-# Ścieżka do pliku SQLite w katalogu aplikacji
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_FILE = os.path.join(BASE_DIR, 'magazyn.db')
+# Render – katalog na dane trwałe
+DATA_DIR = '/opt/render/data'
+os.makedirs(DATA_DIR, exist_ok=True)
+DB_FILE = os.path.join(DATA_DIR, 'magazyn.db')
 
-# Tworzymy bazę tylko jeśli plik nie istnieje
+# Tworzymy tabelę tylko jeśli baza nie istnieje
 def init_db():
     if not os.path.exists(DB_FILE):
         conn = sqlite3.connect(DB_FILE)
@@ -46,12 +47,11 @@ def add_product():
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
     c.execute("INSERT INTO products (name, quantity) VALUES (?, ?)", (name, quantity))
-    conn.commit()
+    conn.commit()  # <--- commit jest konieczny
     conn.close()
     return redirect(url_for('index'))
 
-# Uruchomienie serwera
 if __name__ == "__main__":
-    init_db()  # tworzymy bazę tylko jeśli nie istnieje
+    init_db()
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
