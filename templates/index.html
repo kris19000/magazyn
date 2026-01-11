@@ -58,4 +58,56 @@
                                     </td>
                                 </tr>
                             {% else %}
-                                <t
+                                <tr>
+                                    <td colspan="2" class="text-center text-muted">
+                                        Brak produktów
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRAWA STRONA – DODAWANIE PRODUKTU -->
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    Dodaj produkt
+                </div>
+                <div class="card-body">
+                    <form method="post"
+                          action="{{ url_for('add_product') }}"
+                          class="d-flex gap-2">
+
+                        <!-- SZERSZA NAZWA -->
+                        <input type="text"
+                               name="name"
+                               class="form-control flex-grow-1"
+                               placeholder="Nazwa"
+                               required>
+
+                        <!-- WĘŻSZA ILOŚĆ -->
+                        <input type="number"
+                               name="quantity"
+                               class="form-control"
+                               style="max-width: 90px;"
+                               placeholder="Ilość"
+                               required>
+
+                        <button type="submit"
+                                class="btn btn-success">
+                            ➕
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
