@@ -5,13 +5,26 @@ import os
 app = Flask(__name__)
 DB_FILE = 'magazyn.db'
 
+# Funkcja pomocnicza: tworzy tabelę jeśli nie istnieje
+def init_db():
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS products (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            quantity INTEGER NOT NULL
+        )
+    """)
+    conn.commit()
+    conn.close()
+
 # Strona główna - lista produktów z sumą ilości
 @app.route('/')
 def index():
+    init_db()  # upewniamy się, że tabela istnieje
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
-
-    # Pobieramy unikalne produkty i sumę ilości
     c.execute("""
         SELECT name, SUM(quantity) as total_quantity
         FROM products
@@ -36,5 +49,4 @@ def add_product():
 
 # Uruchomienie serwera
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # Render wymaga zmiennej PORT
-    app.run(host="0.0.0.0", port=port, debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Render wymaga zmiennej P
