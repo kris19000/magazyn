@@ -8,24 +8,24 @@ app = Flask(__name__)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_FILE = os.path.join(BASE_DIR, 'magazyn.db')
 
-# Funkcja tworząca tabelę, jeśli jej nie ma
+# Tworzymy bazę tylko jeśli plik nie istnieje
 def init_db():
-    conn = sqlite3.connect(DB_FILE)
-    c = conn.cursor()
-    c.execute("""
-        CREATE TABLE IF NOT EXISTS products (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            quantity INTEGER NOT NULL
-        )
-    """)
-    conn.commit()
-    conn.close()
+    if not os.path.exists(DB_FILE):
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        c.execute("""
+            CREATE TABLE products (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                quantity INTEGER NOT NULL
+            )
+        """)
+        conn.commit()
+        conn.close()
 
-# Strona główna - lista produktów z sumą ilości
+# Strona główna
 @app.route('/')
 def index():
-    init_db()
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
     c.execute("""
@@ -52,6 +52,6 @@ def add_product():
 
 # Uruchomienie serwera
 if __name__ == "__main__":
-    init_db()
-    port = int(os.environ.get("PORT", 5000))  # Render wymaga zmiennej PORT
+    init_db()  # tworzymy bazę tylko jeśli nie istnieje
+    port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
