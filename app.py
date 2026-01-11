@@ -1,91 +1,151 @@
-from flask import Flask, render_template, request, redirect, url_for
-import sqlite3
-import os
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Magazyn</title>
 
-app = Flask(__name__)
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+        }
 
-# Katalog na dane (Render / lokalnie)
-DATA_DIR = os.environ.get("DATA_DIR", os.path.dirname(os.path.abspath(__file__)))
-os.makedirs(DATA_DIR, exist_ok=True)
-DB_FILE = os.path.join(DATA_DIR, "magazyn.db")
+        .full-height-row {
+            height: 100%;
+        }
 
-# Inicjalizacja bazy – ZAWSZE bezpieczna
- def init_db():
-    conn = sqlite3.connect(DB_FILE)
-    c = conn.cursor()
-    c.execute("""
-        CREATE TABLE IF NOT EXISTS products (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            quantity INTEGER NOT NULL
-        )
-    """)
-    conn.commit()
-    conn.close()
+        /* Lewa tabela z wewnętrznym scroll */
+        .products-table {
+            height: calc(100% - 50px); /* zmniejszona wysokość, aby formularz mieścił się na ekranie */
+            overflow-y: auto;
+            overflow-x: auto; /* scroll poziomy na wąskich ekranach */
+        }
 
+        .sticky-form {
+            position: sticky;
+            top: 20px;
+        }
 
-# Strona główna – UNIKALNE PRODUKTY + SUMA
-@app.route("/")
-def index():
-    init_db()
-    conn = sqlite3.connect(DB_FILE)
-    c = conn.cursor()
-    c.execute("""
-        SELECT name, SUM(quantity) AS total_quantity
-        FROM products
-        GROUP BY name
-        ORDER BY name
-    """)
-    products = c.fetchall()
-    conn.close()
-    return render_template("index.html", products=products)
+        /* Sticky nagłówki */
+        .products-table thead th {
+            position: sticky;
+            top: 0;
+            background-color: #f8f9fa;
+            z-index: 2;
+        }
 
-# Dodawanie produktu
-@app.route("/add", methods=["POST"])
-def add_product():
-    name = request.form["name"].strip()
-    quantity = int(request.form["quantity"])
+        /* Scrollbar ładniejszy */
+        .products-table::-webkit-scrollbar {
+            width: 8px;
+        }
+        .products-table::-webkit-scrollbar-thumb {
+            background-color: rgba(0,0,0,0.2);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-light">
 
-    conn = sqlite3.connect(DB_FILE)
-    c = conn.cursor()
-    c.execute(
-        "INSERT INTO products (name, quantity) VALUES (?, ?)",
-        (name, quantity)
-    )
-    conn.commit()
-    conn.close()
+<div class="container-fluid py-3" style="height: 100%;">
+    <h1 class="mb-4 text-center">📦 Stan magazynu</h1>
+    <div class="row full-height-row" style="height: calc(100% - 80px);">
 
-    return redirect(url_for("index"))
+        <!-- LEWA POŁOWA – TABELA PRODUKTÓW -->
+        <div class="col-md-6 h-100">
+            <div class="card shadow-sm products-table h-100">
+                <div class="card-header bg-primary text-white">
+                    Produkty
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-striped mb-0 align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 70%;">Nazwa</th>
+                                <th style="width: 100px;">Ilość</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for name, total in products %}
+                                <tr>
+                                    <td>{{ name }}</td>
+                                    <td>
+                                        <form method="post"
+                                              action="{{ url_for('update_product') }}"
+                                              class="d-flex gap-2">
 
-@app.route("/update", methods=["POST"])
-def update_product():
-    name = request.form["name"]
-    new_quantity = int(request.form["quantity"])
+                                            <input type="hidden" name="name" value="{{ name }}">
 
-    conn = sqlite3.connect(DB_FILE)
-    c = conn.cursor()
+                                            <input type="number"
+                                                   name="quantity"
+                                                   value="{{ total }}"
+                                                   class="form-control form-control-sm"
+                                                   style="max-width: 100px;"
+                                                   required>
 
-    # usuwamy stare wpisy produktu
-    c.execute("DELETE FROM products WHERE name = ?", (name,))
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-warning">
+                                                Zmień
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="2" class="text-center text-muted">
+                                        Brak produktów
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
-    # dodajemy jeden wpis z nową ilością
-    c.execute(
-        "INSERT INTO products (name, quantity) VALUES (?, ?)",
-        (name, new_quantity)
-    )
+        <!-- PRAWA POŁOWA – DODAWANIE PRODUKTU (sticky) -->
+        <div class="col-md-6 h-100">
+            <div class="sticky-form">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        Dodaj produkt
+                    </div>
+                    <div class="card-body">
+                        <form id="addForm" method="post" action="{{ url_for('add_product') }}" class="d-flex gap-2">
 
-    conn.commit()
-    conn.close()
+                            <input type="text"
+                                   id="productName"
+                                   name="name"
+                                   class="form-control flex-grow-1"
+                                   placeholder="Nazwa"
+                                   required
+                                   autofocus>
 
-    return redirect(url_for("index"))
+                            <input type="number"
+                                   name="quantity"
+                                   class="form-control"
+                                   style="max-width: 100px;"
+                                   placeholder="Ilość"
+                                   required
+                                   value="1">
 
+                            <button type="submit" class="btn btn-success">
+                                ➕
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+    </div>
+</div>
 
-# Start aplikacji
-if __name__ == "__main__":
-    init_db()
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const input = document.getElementById('productName');
+        if(input) input.focus();
+    });
+</script>
 
-
-
+</body>
+</html>
