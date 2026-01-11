@@ -1,3 +1,9 @@
+
+
+
+
+
+
 from flask import Flask, render_template, request, redirect
 import sqlite3
 import os
@@ -48,10 +54,11 @@ def add_product():
     c.execute("INSERT INTO products (name, quantity) VALUES (?, ?)", (name, quantity))
     conn.commit()
     conn.close()
-    return redirect('/')
+    return redirect('/')  # po dodaniu wraca na stronę główną
 
 # Uruchomienie serwera
 if __name__ == "__main__":
     init_db()  # Tworzymy tabelę przy starcie
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
+
