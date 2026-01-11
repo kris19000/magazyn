@@ -13,67 +13,61 @@
 
     <h1 class="mb-4 text-center">📦 Stan magazynu</h1>
 
-    <div class="row">
-
-        <!-- Lista produktów -->
-        <div class="col-md-7">
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-primary text-white">
-                    Produkty
-                </div>
-                <div class="card-body p-0">
-                    <table class="table table-striped mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Nazwa</th>
-                                <th>Ilość</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for name, total in products %}
-                                <tr>
-                                    <td>{{ name }}</td>
-                                    <td>{{ total }}</td>
-                                </tr>
-                            {% else %}
-                                <tr>
-                                    <td colspan="2" class="text-center text-muted">
-                                        Brak produktów
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+    <!-- FORMULARZ DODAWANIA (NA GÓRZE) -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white">
+            Dodaj produkt
         </div>
-
-        <!-- Formularz dodawania -->
-        <div class="col-md-5">
-            <div class="card shadow-sm">
-                <div class="card-header bg-success text-white">
-                    Dodaj produkt
+        <div class="card-body">
+            <form method="post" action="{{ url_for('add_product') }}" class="row g-3">
+                <div class="col-md-8">
+                    <label class="form-label">Nazwa produktu</label>
+                    <input type="text" name="name" class="form-control" required>
                 </div>
-                <div class="card-body">
-                    <form method="post" action="{{ url_for('add_product') }}">
-                        <div class="mb-3">
-                            <label class="form-label">Nazwa produktu</label>
-                            <input type="text" name="name" class="form-control" required>
-                        </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Ilość</label>
-                            <input type="number" name="quantity" class="form-control" required>
-                        </div>
-
-                        <button type="submit" class="btn btn-success w-100">
-                            ➕ Dodaj
-                        </button>
-                    </form>
+                <div class="col-md-4">
+                    <label class="form-label">Ilość</label>
+                    <input type="number" name="quantity" class="form-control" required>
                 </div>
-            </div>
+
+                <div class="col-12">
+                    <button type="submit" class="btn btn-success w-100">
+                        ➕ Dodaj
+                    </button>
+                </div>
+            </form>
         </div>
+    </div>
 
+    <!-- LISTA PRODUKTÓW (NA DOLE) -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            Produkty
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Nazwa</th>
+                        <th>Ilość</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for name, total in products %}
+                        <tr>
+                            <td>{{ name }}</td>
+                            <td>{{ total }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted">
+                                Brak produktów
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
 </div>
