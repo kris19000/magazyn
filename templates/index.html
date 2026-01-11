@@ -53,19 +53,39 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for name, total in products %}
-                        <tr>
-                            <td>{{ name }}</td>
-                            <td>{{ total }}</td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="2" class="text-center text-muted">
-                                Brak produktów
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
+    {% for name, total in products %}
+        <tr>
+            <td>{{ name }}</td>
+            <td>
+                <form method="post"
+                      action="{{ url_for('update_product') }}"
+                      class="d-flex gap-2">
+
+                    <input type="hidden" name="name" value="{{ name }}">
+
+                    <input type="number"
+                           name="quantity"
+                           value="{{ total }}"
+                           class="form-control form-control-sm"
+                           style="width: 100px;"
+                           required>
+
+                    <button type="submit"
+                            class="btn btn-sm btn-warning">
+                        Zmień
+                    </button>
+                </form>
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="2" class="text-center text-muted">
+                Brak produktów
+            </td>
+        </tr>
+    {% endfor %}
+</tbody>
+
             </table>
         </div>
     </div>
@@ -74,3 +94,4 @@
 
 </body>
 </html>
+
