@@ -15,8 +15,8 @@
 
     <div class="row">
 
-        <!-- LEWA STRONA – TABELA PRODUKTÓW -->
-        <div class="col-md-8">
+        <!-- LEWA POŁOWA – TABELA PRODUKTÓW -->
+        <div class="col-md-6">
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white">
                     Produkty
@@ -25,10 +25,10 @@
                     <table class="table table-striped mb-0 align-middle">
                         <thead class="table-light">
                             <tr>
-                                <!-- WĘŻSZA NAZWA -->
-                                <th style="width: 35%;">Nazwa</th>
-                                <!-- ILOŚĆ ZWĘŻONA -->
-                                <th style="width: 120px;">Ilość</th>
+                                <!-- NAZWA WIĘKSZA -->
+                                <th style="width: 70%;">Nazwa</th>
+                                <!-- ILOŚĆ na 5 cyfr -->
+                                <th style="width: 100px;">Ilość</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -42,12 +42,11 @@
 
                                             <input type="hidden" name="name" value="{{ name }}">
 
-                                            <!-- WĘŻSZE POLE ILOŚCI -->
                                             <input type="number"
                                                    name="quantity"
                                                    value="{{ total }}"
                                                    class="form-control form-control-sm"
-                                                   style="max-width: 80px;"
+                                                   style="max-width: 100px;"
                                                    required>
 
                                             <button type="submit"
@@ -70,8 +69,8 @@
             </div>
         </div>
 
-        <!-- PRAWA STRONA – DODAWANIE PRODUKTU -->
-        <div class="col-md-4">
+        <!-- PRAWA POŁOWA – DODAWANIE PRODUKTU -->
+        <div class="col-md-6">
             <div class="card shadow-sm">
                 <div class="card-header bg-success text-white">
                     Dodaj produkt
@@ -81,18 +80,18 @@
                           action="{{ url_for('add_product') }}"
                           class="d-flex gap-2">
 
-                        <!-- SZERSZA NAZWA -->
+                        <!-- NAZWA WIĘKSZA -->
                         <input type="text"
                                name="name"
                                class="form-control flex-grow-1"
                                placeholder="Nazwa"
                                required>
 
-                        <!-- WĘŻSZA ILOŚĆ -->
+                        <!-- ILOŚĆ MAŁA (~5 cyfr) -->
                         <input type="number"
                                name="quantity"
                                class="form-control"
-                               style="max-width: 90px;"
+                               style="max-width: 100px;"
                                placeholder="Ilość"
                                required>
 
