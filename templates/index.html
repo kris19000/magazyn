@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Magazyn</title>
+    <title>Stan magazynu</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,7 +18,7 @@
         /* Nagłówek całej strony */
         header {
             width: 100%;
-            background-color: #4CAF50;
+            background-color: #4CAF50; /* Zielony */
             color: white;
             padding: 15px;
             margin-bottom: 10px;
@@ -44,9 +44,10 @@
 
         .products-container h2 {
             margin: 0 0 10px 0;
-            background-color: #e0e0e0;
+            background-color: #3b8fbf; /* Niebieski kolor dla nagłówka */
             padding: 5px 10px;
             border-radius: 3px;
+            color: white;
         }
 
         .products-table-wrapper {
@@ -94,9 +95,10 @@
 
         .add-container h2 {
             margin: 0 0 10px 0;
-            background-color: #e0e0e0;
+            background-color: #4CAF50; /* Zielony */
             padding: 5px 10px;
             border-radius: 3px;
+            color: white;
         }
 
         .add-container form {
@@ -121,7 +123,7 @@
             flex: 1;
             padding: 5px;
             font-size: 1em;
-            background-color: #4CAF50;
+            background-color: #4CAF50; /* Zielony */
             color: white;
             border: none;
             cursor: pointer;
@@ -130,6 +132,15 @@
 
         .add-container button:hover {
             background-color: #45a049;
+        }
+
+        /* Przycisk "Zmień" pomarańczowy */
+        button[type="submit"] {
+            background-color: #FF9800; /* Pomarańczowy */
+        }
+
+        button[type="submit"]:hover {
+            background-color: #e68900;
         }
 
         /* Responsywność na mniejsze ekrany */
@@ -142,7 +153,7 @@
 </head>
 <body>
 
-<header>📦 Magazyn produktów</header>
+<header>📦 Stan magazynu</header>
 
 <!-- Lewa kolumna: tabela produktów -->
 <div class="products-container">
