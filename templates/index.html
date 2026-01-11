@@ -20,7 +20,7 @@
             width: 100%;
             background-color: white;
             color: black;
-            padding: 10px 0; /* Zmniejszony padding (tylko na górze i dole) */
+            padding: 10px 0; /* Mały padding na górze i dole */
             margin-bottom: 20px; /* Odstęp od pozostałej zawartości */
             box-sizing: border-box;
             border-radius: 5px;
@@ -40,7 +40,7 @@
             box-sizing: border-box;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            height: calc(50vh - 50px);
+            max-height: 70vh; /* Maksymalna wysokość, aby nie zajmowała całego ekranu */
         }
 
         .products-container h2 {
@@ -54,6 +54,7 @@
         .products-table-wrapper {
             overflow-y: auto;
             flex: 1;
+            max-height: 60vh; /* Tabelka przewijalna, nie zajmuje więcej niż 60% ekranu */
         }
 
         table {
@@ -91,7 +92,7 @@
             box-sizing: border-box;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            height: calc(50vh - 50px);
+            max-height: 70vh; /* Maksymalna wysokość kontenera */
         }
 
         .add-container h2 {
