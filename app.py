@@ -1,20 +1,14 @@
-
-
-
-
-
-
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 import os
 
 app = Flask(__name__)
 
-# Render działa w /opt/render/project/src/
+# Ścieżka do pliku SQLite w katalogu aplikacji
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_FILE = os.path.join(BASE_DIR, 'magazyn.db')
 
-# Funkcja tworząca tabelę, jeśli nie istnieje
+# Funkcja tworząca tabelę, jeśli jej nie ma
 def init_db():
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
@@ -28,10 +22,10 @@ def init_db():
     conn.commit()
     conn.close()
 
-# Strona główna
+# Strona główna - lista produktów z sumą ilości
 @app.route('/')
 def index():
-    init_db()  # upewniamy się, że tabela istnieje
+    init_db()
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
     c.execute("""
@@ -54,11 +48,10 @@ def add_product():
     c.execute("INSERT INTO products (name, quantity) VALUES (?, ?)", (name, quantity))
     conn.commit()
     conn.close()
-    return redirect('/')  # po dodaniu wraca na stronę główną
+    return redirect(url_for('index'))
 
 # Uruchomienie serwera
 if __name__ == "__main__":
-    init_db()  # Tworzymy tabelę przy starcie
-    port = int(os.environ.get("PORT", 5000))
+    init_db()
+    port = int(os.environ.get("PORT", 5000))  # Render wymaga zmiennej PORT
     app.run(host="0.0.0.0", port=port, debug=True)
-
