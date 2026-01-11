@@ -9,7 +9,7 @@ def db():
 @app.route("/")
 def index():
     conn = db()
-    produkty = conn.execute("SELECT DISTINCT Produkty.nazwa, Sum(Produkty.ilosc) AS Suma FROM Produkty GROUP BY Produkty.nazwa").fetchall()
+    produkty = conn.execute("SELECT DISTINCT ID, Produkty.nazwa, Sum(Produkty.ilosc) AS Suma FROM Produkty GROUP BY Produkty.nazwa").fetchall()
    
     conn.close()
     return render_template("index.html", produkty=produkty)
@@ -33,6 +33,7 @@ import os
 
 port = int(os.environ.get("PORT", 5000))
 app.run(host="0.0.0.0", port=port)
+
 
 
 
