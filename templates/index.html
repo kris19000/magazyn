@@ -13,85 +13,94 @@
 
     <h1 class="mb-4 text-center">📦 Stan magazynu</h1>
 
-    <!-- FORMULARZ DODAWANIA (NA GÓRZE) -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-success text-white">
-            Dodaj produkt
-        </div>
-        <div class="card-body">
-            <form method="post" action="{{ url_for('add_product') }}" class="row g-3">
-                <div class="col-md-8">
-                    <label class="form-label">Nazwa produktu</label>
-                    <input type="text" name="name" class="form-control" required>
+    <div class="row">
+
+        <!-- LEWA STRONA – TABELA PRODUKTÓW -->
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    Produkty
                 </div>
+                <div class="card-body p-0">
+                    <table class="table table-striped mb-0 align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Nazwa</th>
+                                <th style="width: 220px;">Ilość</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for name, total in products %}
+                                <tr>
+                                    <td>{{ name }}</td>
+                                    <td>
+                                        <form method="post"
+                                              action="{{ url_for('update_product') }}"
+                                              class="d-flex gap-2">
 
-                <div class="col-md-4">
-                    <label class="form-label">Ilość</label>
-                    <input type="number" name="quantity" class="form-control" required>
+                                            <input type="hidden" name="name" value="{{ name }}">
+
+                                            <input type="number"
+                                                   name="quantity"
+                                                   value="{{ total }}"
+                                                   class="form-control form-control-sm"
+                                                   required>
+
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-warning">
+                                                Zmień
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="2" class="text-center text-muted">
+                                        Brak produktów
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
+            </div>
+        </div>
 
-                <div class="col-12">
-                    <button type="submit" class="btn btn-success w-100">
-                        ➕ Dodaj
-                    </button>
+        <!-- PRAWA STRONA – DODAWANIE PRODUKTU -->
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    Dodaj produkt
                 </div>
-            </form>
+                <div class="card-body">
+                    <form method="post"
+                          action="{{ url_for('add_product') }}"
+                          class="d-flex gap-2">
+
+                        <input type="text"
+                               name="name"
+                               class="form-control"
+                               placeholder="Nazwa"
+                               required>
+
+                        <input type="number"
+                               name="quantity"
+                               class="form-control"
+                               placeholder="Ilość"
+                               required>
+
+                        <button type="submit"
+                                class="btn btn-success">
+                            ➕
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <!-- LISTA PRODUKTÓW (NA DOLE) -->
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-            Produkty
-        </div>
-        <div class="card-body p-0">
-            <table class="table table-striped mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th>Nazwa</th>
-                        <th>Ilość</th>
-                    </tr>
-                </thead>
-                <tbody>
-    {% for name, total in products %}
-        <tr>
-            <td>{{ name }}</td>
-            <td>
-                <form method="post"
-                      action="{{ url_for('update_product') }}"
-                      class="d-flex gap-2">
-
-                    <input type="hidden" name="name" value="{{ name }}">
-
-                    <input type="number"
-                           name="quantity"
-                           value="{{ total }}"
-                           class="form-control form-control-sm"
-                           style="width: 100px;"
-                           required>
-
-                    <button type="submit"
-                            class="btn btn-sm btn-warning">
-                        Zmień
-                    </button>
-                </form>
-            </td>
-        </tr>
-    {% else %}
-        <tr>
-            <td colspan="2" class="text-center text-muted">
-                Brak produktów
-            </td>
-        </tr>
-    {% endfor %}
-</tbody>
-
-            </table>
-        </div>
     </div>
 
 </div>
 
 </body>
 </html>
-
